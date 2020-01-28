@@ -9,7 +9,7 @@
 		<script>
 		
 			var data = [];
-
+		
 			axios.get('http://localhost/app/api/movies')
   			.then(function(response){			  
 			data=response.data;	
@@ -35,13 +35,35 @@
 				document.getElementById('movies').innerHTML = divs;
 	  		}); 
 
+			function Search(){
 
-			  
-			  							
-							
-							
+				axios.get('http://localhost/app/api/search?param=Golden')
+  				.then(function(response){			  
+				data=response.data;	
+			
+				var divs = '';				
 
-						
+				for(i=0;i<data.length;i++){
+				
+				    console.log(data); 
+					//concatenates all movies divs
+						divs= divs +  
+										`<div class="movie">
+											<figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
+    										<!--/.Card image-->
+    										<button type="button" class="btn btn-primary"><a class="btn-floating btn-large red"><i class="fa fa-plus"></i></a> preferidos</button>
+											</br>
+											</br>
+											<div  id="movie-title" class="movie-title"><a href="single.html">${data[i].title}</a></div>
+											<p>${data[i].tagline}</p>										
+										</div>`;
+					}
+
+					document.getElementById('movies').innerHTML = divs;
+	  			});
+
+			} 
+			
 		</script>
 
 
@@ -63,9 +85,7 @@
 	</head>
 
 
-	<body>
-		
-
+	<body>		
 		<div id="site-content">
 			<header class="site-header">
 				<div class="container">
@@ -87,7 +107,7 @@
 
 						<form action="#" class="search-form">
 							<input type="text" placeholder="Search...">
-							<button><i class="fa fa-search"></i></button>
+							<button onclick="Search()"><i class="fa fa-search"></i></button>
 						</form>
 					</div> <!-- .main-navigation -->
 
@@ -106,6 +126,7 @@
 							
 						</div> <!-- .movie-list -->
 
+							
 						<!-- <div class="pagination">
 							<a href="#" class="page-number prev"><i class="fa fa-angle-left"></i></a>
 							<span class="page-number current">1</span>
@@ -126,6 +147,7 @@
 
 			</footer>
 		</div>
+
 		<!-- Default snippet for navigation -->
 		
 
