@@ -3,6 +3,7 @@ var data = [];
 
 
 
+// displays all the movies on the db
 function Show(){
     axios.get('http://localhost/app/api/movies')
         .then(function (response) {
@@ -13,7 +14,7 @@ function Show(){
             for (i = 0; i < data.length; i++) {
 
                 console.log(data);
-                //concatenates all movies divs
+                //concatenates all movies divs into one freaking string, the notorious "Gambiarra" 
                 divs = divs +
                     `<div class="movie">
 										<figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
@@ -30,6 +31,7 @@ function Show(){
         });
 }        
 
+//Search for movies titles
 function Search(input) {
 
     axios.get('http://localhost/app/api/search?param=' + input)
@@ -41,7 +43,7 @@ function Search(input) {
             for (i = 0; i < data.length; i++) {
 
                 console.log(data);
-                //concatenates all movies divs
+                //concatenates all movies searched divs into one freaking string, the notorious "Gambiarra" 
                 divs = divs +
                     `<div class="movie">
 											<figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
@@ -59,7 +61,14 @@ function Search(input) {
 
 }
 
+
+function Verify(email){
+    // verify if email already exists on the db, no duplicates here honey!
+}
+
+
 function SignUpUser(email, password) {
+
     //console.log('blabla');
     // let settings = { headers: { 'content-type': 'multipart/form-data' } }
 
@@ -86,7 +95,7 @@ function SignUpUser(email, password) {
 
     
 
-      
+     
 
     
 }
