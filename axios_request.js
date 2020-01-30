@@ -81,9 +81,10 @@ function SignUpUser(email, password) {
         avatar_path :"constant_path"
       }).then(response => {
         console.log(response);
+        window.location.href = "http://localhost:3000/login";
     });
 
-    // window.location.href = "http://localhost:3000";
+    
 
       
 
