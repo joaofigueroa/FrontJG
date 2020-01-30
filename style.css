@@ -82,6 +82,7 @@ h6 {
 abbr[title] {
   border-bottom: 1px dotted; }
 
+
 b,
 strong {
   font-weight: bold; }
@@ -1472,7 +1473,7 @@ ul.arrow {
     font-family: inherit;
     font-weight: 300;
     width: 0;
-    visibility: hidden;
+    visibility: visible;
     opacity: 0;
     -webkit-transition: .3s ease;
             transition: .3s ease;
