@@ -1,5 +1,9 @@
 var data = [];
 
+var User_online = [];
+
+var online_id=1;
+
 function Verify(email, password) {
 
     //necessary to prevent javascript of creating event that cancels POST require
@@ -10,7 +14,7 @@ function Verify(email, password) {
         .then(function (response) {
             data = response.data;
 
-
+            //if data.length is > 0, it means the axios call found a register
             if (data.length > 0) {
 
                 console.log("email já existe (:");
@@ -22,6 +26,77 @@ function Verify(email, password) {
         });
 }
 
+
+function Login(email, password){
+     //necessary to prevent javascript of creating event that cancels POST require
+     event.preventDefault();
+     
+     axios.get('http://localhost/app/api/verify?param=' + email)
+     .then(function (response) {
+         User_online = response.data;
+
+
+         if (User_online.length > 0) {
+
+             if(password == User_online[0].password){
+                
+                window.location.href = "http://localhost:3000/index";
+                online_id=User_online[0].id;
+                console.log("id loggedin:",this.online_id);
+                
+                
+                
+             }
+             else{  
+                console.log("db senha:",User_online[0].password,"senha_digi",password);          
+                document.getElementById('under_alert').innerHTML = "huum, parece que sua senha está errada tente de novo!";                
+                }
+         }
+         else {
+             
+             document.getElementById('under_alert').innerHTML = "huum, parece que esse e-mail nao existe, tente de novo!";                
+         }
+     });
+
+     return online_id;
+
+    
+     
+     
+
+
+}
+
+function favorites(){
+
+    console.log("Here I am",online_id);    
+    axios.get('http://localhost/app/api/favorites?param=' + this.online_id)
+        .then(function (response) {
+            data = response.data;
+            console.log(data);
+
+            // var divs = '';
+
+            // for (i = 0; i < data.length; i++) {
+
+            //     console.log(data);
+            //     //concatenates all movies divs into one freaking string, the notorious "Gambiarra" 
+            //     divs = divs +
+            //         `<div class="movie">
+			// 							<figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
+    		// 							<!--/.Card image-->
+    		// 							<button type="button" class="btn btn-primary"><a class="btn-floating btn-large red"><i class="fa fa-plus"></i></a> preferidos</button>
+			// 							</br>
+			// 							</br>
+			// 							<div  id="movie-title" class="movie-title"><a href="single.html">${data[i].title}</a></div>
+			// 							<p>${data[i].tagline}</p>										
+			// 						</div>`;
+            // }
+
+            // document.getElementById('movies').innerHTML = divs;
+        });
+
+}
 
 function SignUpUser(email, password) {
 

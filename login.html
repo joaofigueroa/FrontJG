@@ -96,22 +96,25 @@
 									<h2 class="section-title">Login</h2>
 									<p>Preencha seus dados e clique em login (:</p>
 								
-									<form onsubmit="SignUpUser(  document.getElementById('Email').value,
-									document.getElementById('Pass').value )" method="POST">
+									<form onsubmit="Login(  document.getElementById('Email').value,
+									document.getElementById('Pass').value )">
 										<div class="form-group">
 										  <strong><label for="InputEmail1">Email</label></strong>
+										  
 										  <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Digite seu novo email">										  
 										</div>
 										<div class="form-group">
 										 <strong><label for="InputPassword1">Senha</label></strong> 
+										 
 										  <input type="password" class="form-control" id="Pass" placeholder="Digite sua nova senha">
 										</div>
-										<!-- <div class="form-group">
-											<strong><label for="FormControlFile1">Escolha sua nova foto</label></strong>
-											<input type="file" class="form-control-file" id="user_avatar">
-										</div>									 -->
+										
+										
 										<button type="submit" class="btn btn-primary">
 										Salvar</button>
+										</br></br>	
+										<small style="color: red;" id="under_alert" class="team-title"></small>
+										
 									</form>
 									</br>
 
