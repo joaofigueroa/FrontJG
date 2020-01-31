@@ -81,7 +81,7 @@ function favorites() {
                     `<div class="movie">
             							<figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
             							<!--/.Card image-->
-            							<button type="button" class="btn btn-primary"><a class="btn-floating btn-large red"><i class="fa fa-plus"></i></a> preferidos</button>
+            							<button type="button" class="btn btn-danger"><a class="btn-floating btn-large red"><i class="fa fa-times"></i></a> remover</button>
             							</br>
             							</br>
             							<div  id="movie-title" class="movie-title"><a href="single.html">${data[i].title}</a></div>
