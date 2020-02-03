@@ -6,8 +6,7 @@
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>	
 	
 		<!-- axios script -->
-		<script src="axios_request_User.js"></script>	
-		<script src="axios_request_Movies.js"></script>	
+		<script src="axios_request.js"></script>	
 
 
 		<meta charset="UTF-8">
@@ -28,7 +27,7 @@
 	</head>
 
 	<!-- onload fucntion Show makes GET require through Axios to get all movies from DB  -->
-	<body onload="favorites()">		
+	<body onload="favorites(), loadMenu()">		
 		<div id="site-content">
 			<header class="site-header">
 				<div class="container">
@@ -40,25 +39,16 @@
 						</div>
 					</a> <!-- #branding -->
 
-					<div class="main-navigation">
-						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-						<ul class="menu">
+					<div id ="navigation" class="main-navigation">						
+						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>						
+							<ul class="menu">
 							<li class="menu-item current-menu-item"><a href="index.html">Home</a></li>
-							<li class="menu-item"><a href="favorites.html">Meus Favoritos</a></li>							
-							<li class="menu-item"><a href="profile.html">Meu Perfil</a></li>						
-						</ul> <!-- .menu -->
-
+							<li class="menu-item"><a href="favorites.html">Meus Favoritos</a></li>														
+							<li id="on_off" class="menu-item"></li>
+							<li id="on_off2" class="menu-item"></li>							
+						</ul>  
 					</div>
 					</br></br></br></br>
-					
-					<!-- <div style="text-align: right;">		
-						<form action="#" class="">
-							<input id ="search" type="text" placeholder="Search...">							
-							<button onclick="Search(document.getElementById('search').value)"><i class="fa fa-search"></i></button>
-						</form>
-					</div>	 -->
-					 <!-- .main-navigation -->
-
 					<div class="mobile-navigation"></div>
 				</div>
 			</header>
