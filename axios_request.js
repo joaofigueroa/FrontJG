@@ -1,32 +1,41 @@
 var data = [];
-var online_id = localStorage.user_id;
+var online_id = 0;
 
 /////////////////////////////Axios requests for Movies////////////////////////////////////////
 
 
-function loadMenu(){
+function loadMenu() {
+
+    // online id is set to the localStorage ID to get loggedIn user
+    online_id = localStorage.user_id;
 
     li_offline = `<a href="login.html">Login</a>`;
     li_offline2 = `<a href="signUp.html">Cadastro</a>`;
-    
+
     li_online = `<a href="profile.html">Meu Perfil</a>`;
     li_online2 = `<a  href="#void" onclick="logout()">Logout</a>`;
+
     
-    if(online_id== 0){
+
+    if (online_id == 0) {
 
         document.getElementById('on_off').innerHTML = li_offline;
         document.getElementById('on_off2').innerHTML = li_offline2;
     }
-    else{
+    else {
         document.getElementById('on_off').innerHTML = li_online;
         document.getElementById('on_off2').innerHTML = li_online2;
     }
 }
 
-// displays all the movies on the db
+// displays all the movies on the db, we have a better catalog than Netflix, we must say
 function Show() {
 
+    // if theres someone online, data_favoirtes saves all favorites movies ID (:
     data_favorites = [];
+
+    // online id is set to the localStorage ID to get loggedIn user
+    online_id = localStorage.user_id;
 
     axios.get('http://localhost/app/api/movies')
         .then(function (response) {
@@ -36,7 +45,7 @@ function Show() {
             var menu = '';
             var button = [];
 
-            //online_id = 0 means theres no one online, gets all the movies.
+            //online_id = 0 means theres no one online (so sad), gets all the movies.
             if (online_id == 0) {
                 console.log('log', online_id);
                 for (i = 0; i < data.length; i++) {
@@ -57,12 +66,14 @@ function Show() {
             }
 
             else {
+                //here we  actually get the users favorites, so we show them already in the index pages
+                //all the movies he loves!
                 axios.get('http://localhost/app/api/favorites?param=' + online_id)
                     .then(function (response) {
                         data_favorites = response.data;
-                        // console.log(data_favorites);
-
-
+                        
+                        //this loop is a brute-force way of seeing wich movies will get a button to add fav
+                        // or a message that indicates the movie is a fav
                         for (i = 0; i < data.length; i++) {
                             if (data_favorites.length == 0) {
                                 button[i] = `<button  onclick= "newFavorite(${data[i].id}, online_id )" type="button" class="btn btn-primary"><a class="btn-floating btn-large red"><i class="far fa-heart"></i></a> preferidos</button>`;
@@ -80,8 +91,7 @@ function Show() {
                             }
                         }
 
-                        for (i = 0; i < data.length; i++) {
-                            //console.log(data);
+                        for (i = 0; i < data.length; i++) {                            
                             //concatenates all movies divs into one freaking string, the notorious "Gambiarra" 
                             divs = divs +
                                 `<div class="movie">
@@ -104,7 +114,7 @@ function Show() {
         });
 }
 
-//Search for movies titles
+//fuction that finds that movie you love by its name
 function Search(input) {
 
     axios.get('http://localhost/app/api/search?param=' + input)
@@ -138,6 +148,9 @@ function Search(input) {
 
 /////////////////////////////Axios requests for Users////////////////////////////////////////
 
+
+
+// this fuction is used on the signUp page only
 function Verify(email, password) {
 
     //necessary to prevent javascript of creating event that cancels POST require
@@ -147,11 +160,12 @@ function Verify(email, password) {
     axios.get('http://localhost/app/api/verify?param=' + email)
         .then(function (response) {
             data = response.data;
-
             //if data.length is > 0, it means the axios call found a register
             if (data.length > 0) {
 
                 console.log("email já existe (:");
+                document.getElementById('under_alert').innerHTML =
+                 "Caraca baby shark, esse email já existe! Faça seu login!";
             }
             else {
                 //calling SignUp fuction to create new user
@@ -161,12 +175,37 @@ function Verify(email, password) {
 }
 
 
+function SignUpUser(email, password) {
+
+    // lines commented bellow to upload image
+
+    let settings = { headers: { 'content-type': 'multipart/form-data' } }
+
+    user_avatar = document.getElementById("user_avatar").files[0];
+
+    let data = new FormData()
+    data.append('user_avatar', user_avatar)
+    data.append('email', email)
+    data.append('password', password)
+
+    //necessary to prevent javascript of creating event that cancels POST require
+    event.preventDefault();
+
+    //var constant_path = "user_avatar";
+
+
+    axios.post('http://localhost/app/api/user-sign-up', data,settings)
+    .then(response => {
+        console.log(response);
+        window.location.href = "http://localhost:3010/login";
+    });
+}
+
 function Login(email, password) {
 
     //necessary to prevent javascript of creating event that cancels POST require
     event.preventDefault();
-    var self = this;
-
+    
     axios.get('http://localhost/app/api/verify?param=' + email)
         .then(function (response) {
 
@@ -174,67 +213,136 @@ function Login(email, password) {
 
             if (data.length > 0) {
                 if (password == data[0].password) {
-                    console.log("id loggedin:", data[0].id);
-                    online_id = data[0].id;
+
+                    // online id is set to the localStorage ID to get loggedIn user                
                     localStorage.setItem('user_id', data[0].id);
+                    profile = `${data[0].email}`;                  
                     window.location.href = "http://localhost:3010/index";
-
-
+                    
                 }
                 else {
                     console.log("db senha:", data[0].password, "senha_digi", password);
-                    document.getElementById('under_alert').innerHTML = "huum, parece que sua senha está errada tente de novo!";
+                    document.getElementById('under_alert').innerHTML = "huum, parece que essa senha está errada, tente mais uma vez!";
                 }
             }
             else {
 
-                document.getElementById('under_alert').innerHTML = "huum, parece que esse e-mail nao existe em nossa base, tente de novo!";
+                document.getElementById('under_alert').innerHTML =
+                 "huum, parece que esse e-mail nao existe em nossa base, limpe os óculos e tente mais uma vez";
             }
-
         });
-
 
 }
 
-function logout(){
-    localStorage.setItem('user_id',0);
+function logout() {
+    localStorage.setItem('user_id', 0);
     window.location.href = "http://localhost:3010/index";
 
 }
 
+
+function alterUser(email, password){
+
+    //necessary to prevent javascript of creating event that cancels POST require
+    event.preventDefault();
+
+    online_id = localStorage.user_id;
+
+    axios.post('http://localhost/app/api/alterUser/'+online_id, {
+        email: email,
+        password: password,
+        user_avatar: "constant_path"
+    }).then(response => {
+        console.log(response);
+        localStorage.setItem('user_id', 0);
+        window.location.href = "http://localhost:3010/login";
+    });
+}
+
+
+
+function deleteUser(email){
+
+    //necessary to prevent javascript of creating event that cancels POST require
+    event.preventDefault();
+    online_id = localStorage.user_id;
+
+    axios.delete('http://localhost/app/api/deleteUser/'+online_id,{       
+    }).then(response => {
+        console.log(response);
+        window.location.href = "http://localhost:3010/index";
+    });
+
+
+}
+
 function favorites() {
-    
 
-    console.log("Here I am", online_id);
-    axios.get('http://localhost/app/api/favorites?param=' + this.online_id)
-        .then(function (response) {
-            data = response.data;
-            var divs = '';
+    online_id = localStorage.user_id;
 
-            
+    var divs_off = `<div class="row justify-content-md-center">				
+                            
+                            <i class=" fas fa-sad-tear fa-7x"></i>                            
+                    </div>        
+                    <div class="row justify-content-md-center">                            
+                            <div class = movie>
+                            </br></br>
+                            <h2>humm,parece que você ainda não tem favoritos.
+                            Faça seu login e escolha seus favoritos</h2>
+                            </div>
+                    </div>        `;
 
-            if(localStorage.user_id == 0){                          
-                document.getElementById('movies').innerHTML = div_off;
-            }
-            else{
-                for (i=0; i < data.length; i++) {
-                    console.log(data);
-                    //concatenates all movies divs into one freaking string, the notorious "Gambiarra" 
-                    divs = divs +
-                        `<div class="movie">
-            							    <figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
-            							    <!--/.Card image-->
-            							    <button type="button"  onclick=removeFavorite(${data[i].id},online_id) class="btn btn-danger"><a class="btn-floating btn-large red"><i class="fa fa-times"></i></a> remover</button>
-            							    </br>
-            							    </br>
-            							    <div  id="movie-title" class="movie-title"><a href="single.html">${data[i].title}</a></div>
-            							    <p>${data[i].tagline}</p>										
-            						    </div>`;
+
+
+    if (online_id == 0) {
+        console.log(divs_off);
+        document.getElementById('movies').innerHTML = divs_off;
+    }
+    else {
+        console.log("Here I am", online_id);
+        axios.get('http://localhost/app/api/favorites?param=' + this.online_id)
+            .then(function (response) {
+                data = response.data;
+                var divs = '';
+
+                if(data.length == 0){
+
+                    var divs =
+                     `<div class="row justify-content-md-center">				        
+                        <i class="fas fa-frown-open fa-7x"></i>
+                    </div>        
+                    <div class="row justify-content-md-center">                            
+                            <div class = movie>
+                            </br></br>
+                            <h2>Como assim você ainda não tem favoritos?
+                            Escolha os seus na página principal</h2>
+                            </div>
+                    </div>        `;
+
+
                 }
 
+                else{
+                    for (i = 0; i < data.length; i++) {
+                        console.log(data);
+                        //concatenates all movies divs into one freaking string, the notorious "Gambiarra" 
+                        divs = divs +
+                            `<div class="movie">
+            							        <figure  class="movie-poster"><img src="Http://image.tmdb.org/t/p/w185/${data[i].poster_path}" alt="#"></figure>																
+            							        <!--/.Card image-->
+            							        <button type="button"  onclick=removeFavorite(${data[i].id},${online_id}) class="btn btn-danger"><a class="btn-floating btn-large red"><i class="fa fa-times"></i></a> remover</button>
+                							    </br>
+            							        </br>
+            							        <div  id="movie-title" class="movie-title"><a href="single.html">${data[i].title}</a></div>
+            							        <p>${data[i].tagline}</p>										
+            		    				    </div>`;
+                    }                
+                }
                 document.getElementById('movies').innerHTML = divs;
-            }
-        });
+            });
+
+    }
+
 
 }
 
@@ -266,30 +374,4 @@ function removeFavorite(movie_id, user_id) {
 }
 
 
-function SignUpUser(email, password) {
 
-    // lines commented bellow to upload image
-
-    // let settings = { headers: { 'content-type': 'multipart/form-data' } }
-
-    // let avatar_path = document.getElementById("user_avatar").files[0]
-
-    // let data = new FormData()
-    // data.append('avatar_path', '/avatar_path')
-    // data.append('email', this.email)
-    // data.append('password', this.password)
-
-    //necessary to prevent javascript of creating event that cancels POST require
-    event.preventDefault();
-
-    var constant_path = "avatar_path";
-
-    axios.post('http://localhost/app/api/user-sign-up', {
-        email: email,
-        password: password,
-        avatar_path: "constant_path"
-    }).then(response => {
-        console.log(response);
-        window.location.href = "http://localhost:3010/login";
-    });
-}

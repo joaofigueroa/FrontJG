@@ -40,20 +40,14 @@
 					<div id ="navigation" class="main-navigation">						
 						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>						
 							<ul class="menu">
-							<li class="menu-item current-menu-item"><a href="index.html">Home</a></li>
+							<li class="menu-item "><a href="index.html">Home</a></li>
 							<li class="menu-item"><a href="favorites.html">Meus Favoritos</a></li>														
-							<li id="on_off" class="menu-item"></li>
+							<li id="on_off" class="menu-item current-menu-item"></li>
 							<li id="on_off2" class="menu-item"></li>							
 						</ul>  
 					</div>
 					</br></br></br></br>
-					
-					<div style="text-align: right;">		
-						<form action="#" class="">
-							<input id ="search" type="text" placeholder="Search...">							
-							<button onclick="Search(document.getElementById('search').value)"><i class="fa fa-search"></i></button>
-						</form>
-					</div>	
+
 					 <!-- .main-navigation -->
 
 					<div class="mobile-navigation"></div>
@@ -85,7 +79,7 @@
 							<div class="col-md-3">
 								<div class="team">
 									<figure class="team-image"><img src="dummy/person-1.jpg" alt=""></figure>
-									<h2 class="team-name">Joao Figueroa</h2>
+									<h2 id ="profile_mail" class="team-name"></h2>
 									
 								</div>
 							</div>
@@ -95,19 +89,20 @@
 									<h2 class="section-title">Seus Dados</h2>
 									<p>Caso queira atualizar seus dados,preencha o formulário abaixo e clique em salvar (:</p>
 								
-									<form>
+									<form onsubmit="alterUser(  document.getElementById('Email').value,
+									document.getElementById('Pass').value )">
 										<div class="form-group">
 										  <strong><label for="InputEmail1">Email</label></strong>
-										  <input type="email" class="form-control" id="InputEmail1" aria-describedby="emailHelp" placeholder="Digite seu novo email">										  
+										  <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Digite seu novo email">										  
 										</div>
 										<div class="form-group">
 										 <strong><label for="InputPassword1">Senha</label></strong> 
-										  <input type="password" class="form-control" id="InputPassword1" placeholder="Digite sua nova senha">
+										  <input type="password" class="form-control" id="Pass" placeholder="Digite sua nova senha">
 										</div>
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<strong><label for="FormControlFile1">Escolha sua nova foto</label></strong>
 											<input type="file" class="form-control-file" id="FormControlFile1">
-										</div>
+										</div> -->
 									
 										<button type="submit" class="btn btn-primary">Salvar</button>
 									</form>
@@ -115,7 +110,7 @@
 
 									<h2  style= "color: red;" class="section-title">Danger Zone!</h2>  
 									<p style= "color: red;" >Para deletar sua conta e todos seus dados, clique no botão abaixo</p>
-									<button type="submit" class="btn btn-danger">Excluir Conta</button>
+									<button  onclick="deleteUser()" type="submit" class="btn btn-danger">Excluir Conta</button>
 									
 								</div>
 
@@ -143,7 +138,9 @@
 		<!-- Default snippet for navigation -->
 		
 
-
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<!-- axios script -->
+		<script src="axios_request.js"></script>
 		<script src="js/jquery-1.11.1.min.js"></script>
 		<script src="js/plugins.js"></script>
 		<script src="js/app.js"></script>
