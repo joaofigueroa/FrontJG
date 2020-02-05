@@ -6,9 +6,15 @@ var online_id = 0;
 
 function loadMenu() {
 
-    // online id is set to the localStorage ID to get loggedIn user
-    online_id = localStorage.user_id;
-
+    // online id is set to the localStorage ID to get loggedIn user 
+    if(isNaN(localStorage.user_id))
+    {
+        online_id =0;        
+    }
+    else{
+        online_id=localStorage.user_id;
+     }
+    
     li_offline = `<a href="login.html">Login</a>`;
     li_offline2 = `<a href="signUp.html">Cadastro</a>`;
 
@@ -35,7 +41,14 @@ function Show() {
     data_favorites = [];
 
     // online id is set to the localStorage ID to get loggedIn user
-    online_id = localStorage.user_id;
+    if(isNaN(localStorage.user_id))
+    {
+        online_id =0;        
+    }
+    else{
+        online_id=localStorage.user_id;
+    }
+    
 
     axios.get('http://localhost/app/api/movies')
         .then(function (response) {
@@ -150,8 +163,36 @@ function Search(input) {
 
 
 
+
+
+function uploadUserAvatar(email,password){
+
+    //necessary to prevent javascript of creating event that cancels POST require
+    event.preventDefault();
+
+    //https://api.imgbb.com/1/upload?key=987c7d94f69ba7644492a96007e46bd0
+    let settings = { headers: { 'content-type': 'multipart/form-data' } }
+
+    user_avatar = document.getElementById("user_avatar").files[0];
+    
+
+    let data = new FormData()
+    data.append('image',user_avatar);
+
+
+
+    axios.post('https://api.imgbb.com/1/upload?key=987c7d94f69ba7644492a96007e46bd0',data,settings)
+    .then(response => {
+        console.log(response.data.data.url);
+        console.log("Email",email);
+        avatar_path = response.data.data.url;
+        Verify(email,password,avatar_path);
+    });
+
+}
+
 // this fuction is used on the signUp page only
-function Verify(email, password) {
+function Verify(email, password,avatar_path) {
 
     //necessary to prevent javascript of creating event that cancels POST require
     event.preventDefault();
@@ -169,32 +210,25 @@ function Verify(email, password) {
             }
             else {
                 //calling SignUp fuction to create new user
-                SignUpUser(email, password);
+                SignUpUser(email, password,avatar_path);
             }
         });
 }
 
-
-function SignUpUser(email, password) {
-
-    // lines commented bellow to upload image
-
-    let settings = { headers: { 'content-type': 'multipart/form-data' } }
-
-    user_avatar = document.getElementById("user_avatar").files[0];
-
-    let data = new FormData()
-    data.append('user_avatar', user_avatar)
-    data.append('email', email)
-    data.append('password', password)
+function SignUpUser(email, password,avatar_path) {
 
     //necessary to prevent javascript of creating event that cancels POST require
     event.preventDefault();
 
     //var constant_path = "user_avatar";
+    
 
-
-    axios.post('http://localhost/app/api/user-sign-up', data,settings)
+    axios.post('http://localhost/app/api/userSignUp',{
+        email:email,
+        password:password,
+        avatar_path: avatar_path
+    }
+    )
     .then(response => {
         console.log(response);
         window.location.href = "http://localhost:3010/login";
@@ -237,6 +271,30 @@ function Login(email, password) {
 function logout() {
     localStorage.setItem('user_id', 0);
     window.location.href = "http://localhost:3010/index";
+
+}
+
+function profileLoad(){
+    //necessary to prevent javascript of creating event that cancels POST require
+    event.preventDefault();
+
+    axios.get('http://localhost/app/api/findUser/' + online_id)
+    .then(function (response) {
+
+        data = response.data;
+
+        console.log(data);
+        console.log("email",data[0].email);
+        console.log("avatar Path",data[0].avatar_path);
+
+        div =
+            `<figure class="team-image"><img src="${data[0].avatar_path}" alt=""></figure>
+                <h2  class="team-name">${data[0].email}</h2>`;
+
+        document.getElementById('userAvatar').innerHTML = div;                
+    });
+    
+    
 
 }
 
