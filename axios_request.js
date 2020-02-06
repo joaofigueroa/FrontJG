@@ -390,7 +390,6 @@ function favorites() {
                             </div>
                     </div>        `;
 
-
                 }
 
                 else{
