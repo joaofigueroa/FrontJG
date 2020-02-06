@@ -14,8 +14,4 @@ Pronto. agora para rodar, basta navegar pelo seu terminal até o local onde se e
 
 ``` http-server -p 3010``` 
 
-A partir desse passo, se tudo estiver certo com seu [backend](https://github.com/joaofigueroa/backendJG), bastará entrar em qualquer navegador, digitar **localhost:3010** na barra de endereços que a seguinte tela será carregada: 
-
-
-
-
+A partir desse passo, se tudo estiver certo com seu [backend](https://github.com/joaofigueroa/backendJG), bastará entrar em qualquer navegador, digitar **localhost:3010** na barra de endereços que a tela inicial será carregada.
