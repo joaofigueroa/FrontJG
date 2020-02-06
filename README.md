@@ -16,4 +16,4 @@ Pronto. agora para rodar, basta navegar pelo seu terminal até o local onde se e
 
 A partir desse passo, se tudo estiver certo com seu [backend](https://github.com/joaofigueroa/backendJG), bastará entrar em qualquer navegador, digitar **localhost:3010** na barra de endereços que a tela inicial será carregada.
 
-[printscren](imagesMD/Screenshot from 2020-02-06 13-58-54)
+<img src="imagesMD/Screenshot from 2020-02-06 13-58-54">
