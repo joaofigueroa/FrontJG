@@ -6,7 +6,7 @@ var online_id = 0;
 
 function loadMenu() {
 
-    // online id is set to the localStorage ID to get loggedIn user 
+    // online id is set to the localStorage ID to get loggedIn user,in the case of its existance 
     if(isNaN(localStorage.user_id))
     {
         online_id =0;        
@@ -22,7 +22,7 @@ function loadMenu() {
     li_online2 = `<a  href="#void" onclick="logout()">Logout</a>`;
 
     
-
+    //changes menu in the case of having an user online. Not working on the mobile version
     if (online_id == 0) {
 
         document.getElementById('on_off').innerHTML = li_offline;
@@ -158,45 +158,46 @@ function Search(input) {
 }
 
 
-
 /////////////////////////////Axios requests for Users////////////////////////////////////////
 
 
-
-
-
-function uploadUserAvatar(email,password){
+function uploadUserAvatar(data_avatar){
 
     //necessary to prevent javascript of creating event that cancels POST require
     event.preventDefault();
-
     //https://api.imgbb.com/1/upload?key=987c7d94f69ba7644492a96007e46bd0
     let settings = { headers: { 'content-type': 'multipart/form-data' } }
 
-    user_avatar = document.getElementById("user_avatar").files[0];
     
-
-    let data = new FormData()
-    data.append('image',user_avatar);
-
-
-
-    axios.post('https://api.imgbb.com/1/upload?key=987c7d94f69ba7644492a96007e46bd0',data,settings)
-    .then(response => {
-        console.log(response.data.data.url);
-        console.log("Email",email);
-        avatar_path = response.data.data.url;
-        Verify(email,password,avatar_path);
+   return  axios.post('https://api.imgbb.com/1/upload?key=987c7d94f69ba7644492a96007e46bd0',data_avatar,settings)
+           .then(response => {
+                avatar_path = response.data.data.url;        
+                    // console.log(response.data.data.url);
+                    // console.log("Email",email);    
+                console.log("upload image",avatar_path);
+                localStorage.setItem('avatar_path', avatar_path);
     });
 
 }
 
 // this fuction is used on the signUp page only
-function Verify(email, password,avatar_path) {
+function Verify(email, password) {
 
     //necessary to prevent javascript of creating event that cancels POST require
     event.preventDefault();
 
+    user_avatar = document.getElementById("user_avatar").files[0];
+    
+    let data_avatar = new FormData()
+    data_avatar.append('image',user_avatar);
+
+    console.log("inside verify data avatar",data_avatar);
+    uploadUserAvatar(data_avatar);
+
+    //console.log("avatar path",localStorage.avatar_path);
+
+    avatar_path=localStorage.avatar_path;
+    
     // verify if email already exists on the db, no duplicates here honey!
     axios.get('http://localhost/app/api/verify?param=' + email)
         .then(function (response) {
@@ -270,6 +271,7 @@ function Login(email, password) {
 
 function logout() {
     localStorage.setItem('user_id', 0);
+    localStorage.setItem('avatar_path', 0);
     window.location.href = "http://localhost:3010/index";
 
 }
@@ -283,9 +285,9 @@ function profileLoad(){
 
         data = response.data;
 
-        console.log(data);
-        console.log("email",data[0].email);
-        console.log("avatar Path",data[0].avatar_path);
+        // console.log(data);
+        // console.log("email",data[0].email);
+        // console.log("avatar Path",data[0].avatar_path);
 
         div =
             `<figure class="team-image"><img src="${data[0].avatar_path}" alt=""></figure>
@@ -306,17 +308,26 @@ function alterUser(email, password){
 
     online_id = localStorage.user_id;
 
-    axios.post('http://localhost/app/api/alterUser/'+online_id, {
+    user_avatar = document.getElementById("user_avatar").files[0];
+    
+    let data_avatar = new FormData()
+    data_avatar.append('image',user_avatar);
+
+    uploadUserAvatar(data_avatar);
+    
+    avatar_path=localStorage.avatar_path;
+
+
+    axios.put('http://localhost/app/api/alterUser/'+online_id, {
         email: email,
         password: password,
-        user_avatar: "constant_path"
+        user_avatar: avatar_path
     }).then(response => {
         console.log(response);
         localStorage.setItem('user_id', 0);
         window.location.href = "http://localhost:3010/login";
     });
 }
-
 
 
 function deleteUser(email){
@@ -327,6 +338,8 @@ function deleteUser(email){
 
     axios.delete('http://localhost/app/api/deleteUser/'+online_id,{       
     }).then(response => {
+        localStorage.setItem('user_id', 0);
+        localStorage.setItem('user_avatar', 0);
         console.log(response);
         window.location.href = "http://localhost:3010/index";
     });
