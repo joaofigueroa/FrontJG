@@ -6,7 +6,7 @@ Esse projeto faz parte da trilha de aprendizado de backend da startUp Jovens Gê
 
 A implementação do backend relacionado a esse projeto se encontra nesse [repositório](https://github.com/joaofigueroa/backendJG), onde existem instruções para seu devido funcionamento.
 
-Para que tudo funcione de forma correta por aqui, em um ambiente local é necessário a instalação de um simples servidor em sua máquina caso não haja. Durante os testes feitos ao decorrer da implementação, foi utilizado o **http-server** . Sua instalação  é bem simples, e pode ser feita globalmente a partir de seu terminal com o comando a seguir: 
+Para que tudo funcione de forma correta por aqui, em um ambiente local é necessário a instalação de um simples servidor em sua máquina caso ainda não exista. Durante os testes feitos ao decorrer da implementação, foi utilizado o **http-server** . Sua instalação  é bem simples, e pode ser feita globalmente a partir de seu terminal com o comando a seguir: 
 
 ```  npm install http-server -g``` 
 
